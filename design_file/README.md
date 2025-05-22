@@ -1,0 +1,1 @@
+These files are designed by rhino 7 software. If you want to open it, you must have rhino version 7 or higher. Or any software that supports .3dm files.
