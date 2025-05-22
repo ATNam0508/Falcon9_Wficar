@@ -1,0 +1,59 @@
+{
+    "configurations": [
+        {
+            "name": "ESP-IDF",
+            "compilerPath": "${config:idf.toolsPathWin}\\tools\\xtensa-esp-elf\\esp-14.2.0_20241119\\xtensa-esp-elf\\bin\\xtensa-esp32-elf-gcc.exe",
+            "compileCommands": [
+                "${config:idf.buildPath}/compile_commands.json"
+            ],
+            "includePath": [
+                "${config:idf.espIdfPath}/components/**",
+                "${config:idf.espIdfPathWin}/components/**",
+                "${workspaceFolder}/**",
+                "C:/Espressif/frameworks/esp-idf-v5.4.1/components/esp_wifi/include"
+            ],
+            "browse": {
+                "path": [
+                    "${config:idf.espIdfPath}/components",
+                    "${config:idf.espIdfPathWin}/components",
+                    "${workspaceFolder}"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        },
+        {
+            "name": "falcon9",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        },
+        {
+            "name": "falcon9",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        },
+        {
+            "name": "falcon9",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ]
+        }
+    ],
+    "version": 4
+}
