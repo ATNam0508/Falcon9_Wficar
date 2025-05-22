@@ -7,7 +7,6 @@
 #include "pid.h"
 #include "espnow.h"
 
-#include "esp_log.h"
 #include "stdio.h"
 #include "string.h"
 
