@@ -7,57 +7,40 @@
 extern "C" {
 #endif
 
-#define MPU6050_ADDR         0x68
-#define MPU6050_WHO_AM_I_REG 0x75
-#define MPU6050_PWR_MGMT_1   0x6B
-#define MPU6050_ACCEL_XOUT_H 0x3B
-#define MPU6050_GYRO_XOUT_H  0x43
-
-/**
- * @brief Structure to hold raw data from the MPU6050 sensor
- */
 typedef struct {
-    int16_t accel_x;     ///< Acceleration on X-axis
-    int16_t accel_y;     ///< Acceleration on Y-axis
-    int16_t accel_z;     ///< Acceleration on Z-axis
-    int16_t gyro_x;      ///< Gyroscope on X-axis
-    int16_t gyro_y;      ///< Gyroscope on Y-axis
-    int16_t gyro_z;      ///< Gyroscope on Z-axis
-    int16_t temp_raw;    ///< Raw temperature data
+    int16_t accel_x;
+    int16_t accel_y;
+    int16_t accel_z;
+    int16_t gyro_x;
+    int16_t gyro_y;
+    int16_t gyro_z;
+    int16_t temp_raw;
 } mpu6050_data_t;
 
 /**
- * @brief Structure to configure and access the MPU6050
+ * @brief Khởi tạo I2C và MPU6050, tự động hiệu chuẩn trục Z
  */
-typedef struct {
-    i2c_port_t i2c_port; ///< I2C port used
-    uint8_t addr;        ///< I2C address of the MPU6050
-} mpu6050_t;
+esp_err_t imu_init(i2c_port_t i2c_port, gpio_num_t sda, gpio_num_t scl, uint32_t clk_speed);
 
 /**
- * @brief Initialize the MPU6050 sensor
- * 
- * @param dev Pointer to the MPU6050 device structure
- * @return esp_err_t ESP_OK on success
+ * @brief Cập nhật dữ liệu IMU (đọc và xử lý)
  */
-esp_err_t mpu6050_init(mpu6050_t* dev);
+void imu_update(void);
 
 /**
- * @brief Read accelerometer, gyroscope, and temperature data from MPU6050
- * 
- * @param dev Pointer to the MPU6050 device structure
- * @param data Pointer to the structure to store sensor data
- * @return esp_err_t ESP_OK on success
+ * @brief Trả về góc quay trục Z tính được (đơn vị độ)
  */
-esp_err_t mpu6050_read(mpu6050_t* dev, mpu6050_data_t* data);
+float imu_get_angle_z(void);
 
 /**
- * @brief User-defined execution function to process MPU6050 data
- * 
- * @param dev Pointer to the MPU6050 device structure
- * @param data Pointer to the data structure containing the latest sensor values
+ * @brief Reset lại góc quay Z về 0
  */
-void mpu6050_execute(mpu6050_t* dev, mpu6050_data_t* data);
+void imu_reset_angle_z(void);
+
+/**
+ * @brief calibrate IMU
+ */
+void imu_calibrate(void);
 
 #ifdef __cplusplus
 }

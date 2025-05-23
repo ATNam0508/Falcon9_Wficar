@@ -43,9 +43,6 @@ void print_data(void) {
            recv_data.state_button_5);
 }
 
-
-
-
 void app_main(void)
 {   
     espnow_init(1);                         // Khởi tạo ESP-NOW với kênh 1
