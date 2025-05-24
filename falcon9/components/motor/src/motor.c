@@ -32,6 +32,8 @@ motor_handler_t *motor_new_handle(gpio_num_t dir_gpio, gpio_num_t pwm_gpio,
     // Configure direction GPIO as output and set to default forward direction
     gpio_set_direction(dir_gpio, GPIO_MODE_OUTPUT);
     gpio_set_level(dir_gpio, 0); // Default: forward
+    gpio_set_direction(GPIO_NUM_18, GPIO_MODE_OUTPUT);
+    gpio_set_level(GPIO_NUM_18, 0); // Default: disable
 
     // Configure PWM timer: 12-bit resolution, 10 kHz frequency
     ledc_timer_config_t timer_config = {
@@ -73,8 +75,7 @@ void motor_delete_handle(motor_handler_t *self) {
  * @param enable true to enable (set 50% duty), false to disable (0% duty)
  */
 void motor_set_enable(motor_handler_t *self, bool enable) {
-    // ledc_set_duty(LEDC_LOW_SPEED_MODE, self->pwm_channel, enable ? 2048 : 0); // 50% duty if enabled
-    // ledc_update_duty(LEDC_LOW_SPEED_MODE, self->pwm_channel);
+    gpio_set_level(GPIO_NUM_18, enable);
 }
 
 /**
@@ -97,4 +98,22 @@ void motor_set_speed(motor_handler_t *self, uint16_t duty_cycle) {
     if (duty_cycle > 4095) duty_cycle = 4095;
     ledc_set_duty(LEDC_LOW_SPEED_MODE, self->pwm_channel, duty_cycle);
     ledc_update_duty(LEDC_LOW_SPEED_MODE, self->pwm_channel);
+}
+
+/**
+ * @brief Hàm điều khiển động cơ
+ * 
+ * @param motor Con trỏ đến động cơ
+ * @param speed Tốc độ động cơ
+ */
+void motor_control(motor_handler_t *motor, int speed) {
+    if (speed >= 3000) speed = 3000;
+    if (speed <= -3000) speed = -3000;
+    if (speed >= 0) {
+        motor_set_direction(motor, 1); // Chạy tới
+        motor_set_speed(motor,  4095 - speed); // Tốc độ
+    } else {
+        motor_set_direction(motor, 0); // Chạy lùi
+        motor_set_speed(motor, 4095 + speed); // Tốc độ
+    }
 }

@@ -53,6 +53,14 @@ void motor_set_direction(motor_handler_t *self, bool forward);
  */
 void motor_set_speed(motor_handler_t *self, uint16_t duty_cycle);
 
+/**
+ * @brief Hàm điều khiển động cơ
+ * 
+ * @param motor Con trỏ đến động cơ
+ * @param speed Tốc độ động cơ
+ */
+void motor_control(motor_handler_t *motor, int speed);
+
 #ifdef __cplusplus
 }
 #endif

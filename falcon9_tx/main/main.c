@@ -145,7 +145,7 @@ void print_task(void *pvParameters) {
                gpio_get_level(BUTTON3_GPIO),
                gpio_get_level(BUTTON4_GPIO),
                gpio_get_level(BUTTON5_GPIO));
-        vTaskDelay(pdMS_TO_TICKS(500)); // 2Hz
+        vTaskDelay(pdMS_TO_TICKS(10)); // 2Hz
     }
 }
 
@@ -191,7 +191,7 @@ void app_main(void) {
             .state_button_5 = gpio_get_level(BUTTON5_GPIO),
         };
 
-        espnow_send(dest_mac, (uint8_t *)&data, sizeof(data));
+            (dest_mac, (uint8_t *)&data, sizeof(data));
         vTaskDelay(pdMS_TO_TICKS(10)); // gửi 100Hz
     }
 }

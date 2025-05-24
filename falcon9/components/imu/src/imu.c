@@ -14,7 +14,7 @@ static const char *TAG = "IMU";
 // Toàn cục dùng chung cho mọi thao tác
 static i2c_port_t imu_i2c_port;
 static float angle_z = 0;
-static float gyro_z_offset = 0;
+float gyro_z_offset = 0;
 static uint8_t buf[14];  // Buffer dùng chung để đọc dữ liệu
 
 static mpu6050_data_t raw_data;
@@ -53,7 +53,7 @@ esp_err_t imu_init(i2c_port_t i2c_port, gpio_num_t sda, gpio_num_t scl, uint32_t
     ESP_ERROR_CHECK(read_bytes(WHO_AM_I_REG, &id, 1));
     if (id != 0x68) {
         ESP_LOGE(TAG, "MPU6050 not found (WHO_AM_I=0x%02X)", id);
-        return ESP_FAIL;
+        // return ESP_FAIL;
     }
 
     // Đánh thức MPU6050

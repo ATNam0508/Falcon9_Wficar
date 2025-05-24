@@ -39,6 +39,10 @@
     "type_traits": "c",
     "unordered_map": "c",
     "utility": "c",
-    "vector": "c"
+    "vector": "c",
+    "freertos.h": "c",
+    "i2c.h": "c",
+    "task.h": "c",
+    "stdio.h": "c"
   }
 }
