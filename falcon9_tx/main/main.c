@@ -129,7 +129,7 @@ void on_send(const uint8_t *mac_addr, esp_now_send_status_t status) {
 void imu_task(void *pvParameters) {
     while (1) {
         imu_update();
-        vTaskDelay(pdMS_TO_TICKS(10)); // 100Hz
+        vTaskDelay(pdMS_TO_TICKS(1)); // 1000Hz
     }
 }
 
@@ -139,19 +139,22 @@ void imu_task(void *pvParameters) {
 void print_task(void *pvParameters) {
     while (1) {
         printf("ADC1: %d, ADC2: %d, Angle: %.2f, Buttons: [%d %d %d %d %d]\n",
-               x_value, y_value, imu_get_angle_z(),
+               x_value, y_value, imu_get_angle_z() / 10,
                gpio_get_level(BUTTON1_GPIO),
                gpio_get_level(BUTTON2_GPIO),
                gpio_get_level(BUTTON3_GPIO),
-               gpio_get_level(BUTTON4_GPIO),
+               gpio_get_level(BUTTON4_GPIO),    
                gpio_get_level(BUTTON5_GPIO));
-        vTaskDelay(pdMS_TO_TICKS(10)); // 2Hz
+        vTaskDelay(pdMS_TO_TICKS(10)); // 100Hz
     }
 }
 
 /**
  * @brief Hàm main: khởi tạo và chạy chương trình
  */
+
+ int _cnt;
+
 void app_main(void) {
     // 1. Khởi tạo ESP-NOW
     espnow_init(1);
@@ -171,7 +174,7 @@ void app_main(void) {
 
     // 4. Tạo các task FreeRTOS
     xTaskCreate(imu_task, "imu_task", 2048, NULL, 10, NULL);
-    xTaskCreate(print_task, "print_task", 2048, NULL, 5, NULL);
+    // xTaskCreate(print_task, "print_task", 2048, NULL, 5, NULL);
 
     // 5. Vòng lặp chính: gửi dữ liệu qua ESP-NOW
     while (1) {
@@ -183,7 +186,7 @@ void app_main(void) {
         PacketData data = {
             .ADC1 = x_value,
             .ADC2 = y_value,
-            .angle_tx = imu_get_angle_z(),
+            .angle_tx = (imu_get_angle_z() / 10),
             .state_button_1 = gpio_get_level(BUTTON1_GPIO),
             .state_button_2 = gpio_get_level(BUTTON2_GPIO),
             .state_button_3 = gpio_get_level(BUTTON3_GPIO),
@@ -191,7 +194,7 @@ void app_main(void) {
             .state_button_5 = gpio_get_level(BUTTON5_GPIO),
         };
 
-            (dest_mac, (uint8_t *)&data, sizeof(data));
+        espnow_send(dest_mac, (uint8_t *)&data, sizeof(data));
         vTaskDelay(pdMS_TO_TICKS(10)); // gửi 100Hz
     }
 }

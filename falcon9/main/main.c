@@ -79,7 +79,7 @@ void app_main(void)
     float kp = 0.5;
     float ki = 0.25;
     float kd = 0.0001;
-    float dt = 0.01;  // thời gian lấy mẫu 10ms
+    float dt = 0.001;  // thời gian lấy mẫu 10ms
 
     pid = pid_new_handle(kp, ki, kd, dt);
     if (!pid) {
@@ -93,22 +93,22 @@ void app_main(void)
 
     while (1) {
         imu_update(); // Cập nhật dữ liệu IMU
-        if (recv_data.state_button_3 == 0)  {
-            pwr = 3000;
+        if (recv_data.state_button_3 == 0)  {                                                    
+            pwr = 3500;
         } else {
-            pwr = map(recv_data.ADC2, 1720, 0, 0, 2000);
+            pwr = map(recv_data.ADC2, 1650, 0, 0, 2500);
         }
 
         if (recv_data.state_button_1 == 0) {
-            rotate -= 55;
+            rotate -= 5;
         }
         if (recv_data.state_button_4 == 0) {
-            rotate += 55;
+            rotate += 5;
         }
 
-        motor_control(motor1, pwr + (-(pid_compute(pid, (recv_data.angle_tx) * 0.65 + rotate, imu_get_angle_z())))); // Điều khiển động cơ 1
-        motor_control(motor2, - pwr + (-(pid_compute(pid, (recv_data.angle_tx) * 0.65 + rotate, imu_get_angle_z())))); // Điều khiển động cơ 2
-        print_data();
-        vTaskDelay(pdMS_TO_TICKS(10)); // Đợi 10ms
+        motor_control(motor1, -pwr + (-(pid_compute(pid, (recv_data.angle_tx) * 0.65 + rotate, imu_get_angle_z() / 10)))); // Điều khiển động cơ 1
+        motor_control(motor2,  pwr + (-(pid_compute(pid, (recv_data.angle_tx) * 0.65 + rotate, imu_get_angle_z() / 10)))); // Điều khiển động cơ 2
+        // print_data();
+        vTaskDelay(pdMS_TO_TICKS(1)); // 1000hz 
     }
 }
